@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="may.i.jhq.mapper.UserMapper" >
+    
+    <resultMap id="UserMap" type="may.i.jhq.model.User">
+        <id property="id" column="id"/>
+        <result column="name" property="name"/>
+        <result column="email" property="email"/>
+        <result column="create_time" property="createTime"/>
+        <result column="password" property="password"/>
+        <association javaType="may.i.jhq.model.Role" property="role">
+            <id property="id" column="r_id" />
+            <result property="name" column="r_name"/>
+        </association>
+    </resultMap>
+
+  <insert id="insert" parameterType="may.i.jhq.model.User" keyProperty="id" useGeneratedKeys="true">
+      <selectKey keyProperty="id" resultType="java.lang.Long">
+          select LAST_INSERT_ID()
+      </selectKey>
+      INSERT INTO USER(name,email,password,role,create_time)
+      VALUES(#{name},#{email},#{password},#{role.id},#{createTime})
+  </insert>
+
+    <select id="findByEmail" parameterType="java.lang.String" resultMap="UserMap">
+        SELECT u.id,u.name,r.id AS r_id,r.name AS r_name,u.create_time,u.email,u.password FROM USER u LEFT JOIN ROLE r ON u.role=r.id WHERE u.email=#{email}
+    </select>
+
+</mapper>
