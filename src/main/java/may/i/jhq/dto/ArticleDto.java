@@ -1,4 +1,4 @@
-package may.i.jhq.model;
+package may.i.jhq.dto;
 
 import lombok.Data;
 
@@ -6,11 +6,10 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by jinhuaquan on 2017/7/11.
+ * Created by jinhuaquan on 2017/7/18.
  */
 @Data
-public class Article implements Serializable{
-    private static final long serialVersionUID = 1L;
+public class ArticleDto implements Serializable{
 
     private Long id;
 
@@ -21,10 +20,6 @@ public class Article implements Serializable{
     private String keyWords;
 
     private String type;
-
-    private User user;
-
-    private Date createTime;
 
     private Date updateTime;
 }

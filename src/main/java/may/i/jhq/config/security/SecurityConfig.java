@@ -16,7 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)//开启security注解
+@EnableGlobalMethodSecurity(securedEnabled = true)//开启security注解
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Bean
@@ -31,7 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         http.csrf().disable();
         //允许所有用户访问"/"和"/home"
         http.authorizeRequests()
-                .antMatchers("/", "/home","/user/save").permitAll()
+                .antMatchers("/","/user/save","/health","/autoconfig","/beans","/configprops","/env","/mappings","/info","/metrics","/dump","/trace","/shutdown")
+                .permitAll()
                 //其他地址的访问均需验证权限
                 .anyRequest().authenticated()
                 .and()

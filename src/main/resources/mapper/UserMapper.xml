@@ -26,4 +26,8 @@
         SELECT u.id,u.name,r.id AS r_id,r.name AS r_name,u.create_time,u.email,u.password FROM USER u LEFT JOIN ROLE r ON u.role=r.id WHERE u.email=#{email}
     </select>
 
+    <select id="findById" parameterType="java.lang.Long" resultMap="UserMap">
+        SELECT u.id,u.name,r.id AS r_id,r.name AS r_name,u.create_time,u.email,u.password FROM USER u LEFT JOIN ROLE r ON u.role=r.id WHERE u.id=#{id}
+    </select>
+
 </mapper>

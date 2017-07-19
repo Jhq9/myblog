@@ -1,9 +1,15 @@
 spring:
-  redis:
-    host: 127.0.0.1
-    port: 6379
-    password: whyjhqlove512
-
+#  redis:
+#    host: 127.0.0.1
+#    port: 6379
+#    password: whyjhqlove512
+#    database: 1
+#    pool:
+#      max-active: 8
+#      max-wait: -1
+#      max-idle: 500
+#      min-idle: 0
+#    timeout: 0
   datasource:
       driver-class-name: com.mysql.jdbc.Driver
       url: jdbc:mysql://localhost:3306/blog?useUnicode=true&characterEncoding=UTF-8
@@ -24,10 +30,20 @@ spring:
           starttls:
             enable: true
             required: true
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: may
+    password: whyjhqlove512
+  output:
+    ansi:
+      enabled: always
 mybatis:
   config-location: classpath:/mybatis.xml
   mapper-locations: classpath:/mapper/*.xml
 logging:
   level: info
   file: ./log.log
+
+
 

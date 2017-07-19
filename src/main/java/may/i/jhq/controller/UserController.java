@@ -6,7 +6,7 @@ import may.i.jhq.model.User;
 import may.i.jhq.service.RoleService;
 import may.i.jhq.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -81,9 +81,16 @@ public class UserController {
         return "Hello";
     }
 
-    @PreAuthorize("hasAnyRole('author','reader')")
-    @GetMapping("/home")
-    public String welcome(){
+    @Secured("ROLE_AUTHOR")
+    @PostMapping("/home")
+    public String welcome(@RequestParam String email){
+
+        System.out.println("email:"+email);
+
+        User user = userService.findUserByEmail(email);
+
+        roleService.findRoleById(user.getRole().getId());
+
         return "welcome";
     }
 

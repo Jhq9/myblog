@@ -25,4 +25,8 @@ public class UserService {
 //        System.out.println(userMapper.findByEmail(email));
         return userMapper.findByEmail(email);
     }
+
+    public User findUserById(Long id){
+        return userMapper.findById(id);
+    }
 }

@@ -2,13 +2,68 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="may.i.jhq.mapper.ArticleMapper" >
 
+    <resultMap id="articleMap" type="may.i.jhq.model.Article">
+        <id column="id" javaType="java.lang.Long" property="id"/>
+        <result column="title" javaType="java.lang.String" property="title"/>
+        <result column="content" javaType="java.lang.String" property="content"/>
+        <result column="keyWords" javaType="java.lang.String" property="keyWords"/>
+        <result column="type" javaType="java.lang.String" property="type"/>
+        <result column="create_time" javaType="java.util.Date" property="createTime"/>
+        <result column="update_time" javaType="java.util.Date" property="updateTime"/>
+        <association property="user" select="may.i.jhq.mapper.UserMapper.findById" column="user"/>
+    </resultMap>
 
-    <insert id="insert" parameterType="may.i.jhq.model.Article" keyProperty="id" useGeneratedKeys="true">
+    <!-- 插入一篇文章 -->
+    <insert id="save" parameterType="may.i.jhq.model.Article" keyProperty="id" useGeneratedKeys="true">
         <selectKey keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        INSERT INTO ARTICLE(title,user,content,create_time,key_words,type,update_time) VALUES (#{title},#{user},
+        INSERT INTO ARTICLE(title,user,content,create_time,key_words,type,update_time) VALUES (#{title},#{user.id},
         #{content},#{createTime},#{keyWords},#{type},#{updateTime})
     </insert>
 
+    <!-- 更新一篇文章 -->
+    <update id="update" parameterType="may.i.jhq.dto.ArticleDto" >
+        UPDATE article SET title=#{articleDto.title},content=#{articleDto.content},key_words=#{articleDto.keyWords},type=#{articleDto.type},update_time=#{articleDto.updateTime} WHERE id=#{articleDto.id}
+    </update>
+
+    <!-- 根据ID查询出文章信息 -->
+    <select id="findById" parameterType="Long" resultMap="articleMap">
+        SELECT a.*,u.*,r.* FROM article a LEFT JOIN user u ON a.user=u.id LEFT JOIN role r ON r.id=u.role WHERE a.id=#{id}
+    </select>
+
+    <!-- 文章的查询分页 -->
+    <select id="findPageArts" resultType="may.i.jhq.dto.ArticleIntroDto" >
+        SELECT id,title,key_words,type,create_time,update_time FROM article
+        <where>
+            <if test="articlePageDto.type != null and articlePageDto.type!=''">
+                type=#{articlePageDto.type,jdbcType=VARCHAR}
+            </if>
+
+            <if test="articlePageDto.keyWords != null and articlePageDto.keyWords!=''">
+                key_words LIKE CONCAT(CONCAT('%',#{articlePageDto.keyWords}),'%')
+            </if>
+        </where>
+        ORDER BY create_time DESC LIMIT (#{articlePageDto.pageNo}-1)*#{articlePageDto.pageSize},#{articlePageDto.pageSize}
+    </select>
+
+    <!-- 根据ID删除指定的一篇文章 -->
+    <delete id="deleteById" parameterType="Long" >
+        DELETE FROM article WHERE id=#{id}
+    </delete>
+
+    <!-- 分页查询时统计总的文章数目 -->
+    <select id="countArticles" resultType="java.lang.Integer" parameterType="may.i.jhq.dto.ArticlePageDto">
+        SELECT COUNT(id) FROM article
+        <where>
+            <if test="articlePageDto.type != null and articlePageDto.type!=''">
+                type=#{articlePageDto.type,jdbcType=VARCHAR}
+            </if>
+
+            <if test="articlePageDto.keyWords != null and articlePageDto.keyWords!=''">
+                key_words LIKE CONCAT(CONCAT('%',#{articlePageDto.keyWords}),'%')
+            </if>
+        </where>
+    </select>
+    
 </mapper>
