@@ -15,6 +15,9 @@ public class ChildComment implements Serializable{
 
     private Long id;
 
+    /**
+     * 父评论的ID
+     */
     private Long parentComment;
 
     private Date createTime;
@@ -22,5 +25,15 @@ public class ChildComment implements Serializable{
     private String content;
 
     private String status;
+
+    /**
+     * 所回复的用户
+     */
+    private Long toUser;
+
+    /**
+     * 进行回复的用户
+     */
+    private Long fromUser;
 
 }

@@ -11,7 +11,7 @@
  Target Server Version : 50635
  File Encoding         : utf-8
 
- Date: 07/18/2017 17:38:23 PM
+ Date: 07/20/2017 17:21:33 PM
 */
 
 SET NAMES utf8mb4;
@@ -24,12 +24,41 @@ DROP TABLE IF EXISTS `article`;
 CREATE TABLE `article` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL,
-  `content` clob NOT NULL,
+  `content` longtext NOT NULL,
   `key_words` varchar(255) DEFAULT NULL,
   `type` varchar(255) DEFAULT NULL,
   `user` bigint(20) NOT NULL,
   `create_time` datetime NOT NULL,
   `update_time` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `child_comment`
+-- ----------------------------
+DROP TABLE IF EXISTS `child_comment`;
+CREATE TABLE `child_comment` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `parent_comment` bigint(20) NOT NULL,
+  `content` varchar(1024) NOT NULL,
+  `create_time` datetime NOT NULL,
+  `status` varchar(64) DEFAULT NULL,
+  `to_user` bigint(20) NOT NULL,
+  `from_user` bigint(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+--  Table structure for `comment`
+-- ----------------------------
+DROP TABLE IF EXISTS `comment`;
+CREATE TABLE `comment` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `content` varchar(1024) NOT NULL,
+  `user` bigint(20) NOT NULL,
+  `article` bigint(20) NOT NULL,
+  `status` varchar(64) NOT NULL,
+  `create_time` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

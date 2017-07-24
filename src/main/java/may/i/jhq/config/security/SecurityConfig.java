@@ -10,6 +10,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  * Created by jinhuaquan on 2017/7/11.
@@ -30,8 +33,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         //允许所有用户访问"/"和"/home"
-        http.authorizeRequests()
-                .antMatchers("/","/user/save","/health","/autoconfig","/beans","/configprops","/env","/mappings","/info","/metrics","/dump","/trace","/shutdown")
+        http.cors().and()
+                .authorizeRequests()
+                .antMatchers("/","/home","/user/save","/health","/autoconfig","/beans","/configprops","/env","/mappings","/info","/metrics","/dump","/trace","/shutdown")
                 .permitAll()
                 //其他地址的访问均需验证权限
                 .anyRequest().authenticated()
@@ -49,6 +53,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     }
 
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        return source;
+    }
 
 
     @Autowired

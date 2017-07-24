@@ -2,8 +2,29 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="may.i.jhq.mapper.CommentMapper" >
 
+    <resultMap id="commentsMap" type="may.i.jhq.dto.CommentsDto">
+        <association property="comment" javaType="may.i.jhq.model.Comment">
+            <id column="p_id" property="id" />
+            <result column="p_article" property="article"/>
+            <result column="p_status" property="status"/>
+            <result column="p_createTime" property="createTime"/>
+            <result column="p_content" property="content"/>
+            <result column="user" property="user"/>
+        </association>
+        <collection property="childComments" ofType="may.i.jhq.model.ChildComment">
+            <id column="c_id" property="id"/>
+            <result column="parent_comment" property="parentComment"/>
+            <result column="c_status" property="status"/>
+            <result column="c_createTime" property="createTime"/>
+            <result column="c_content" property="content"/>
+            <result column="from_user" property="fromUser"/>
+            <result column="to_user" property="toUser"/>
 
-    <insert id="insert" parameterType="may.i.jhq.model.Comment" keyProperty="id" useGeneratedKeys="true">
+        </collection>
+    </resultMap>
+
+
+    <insert id="save" parameterType="may.i.jhq.model.Comment" keyProperty="id" useGeneratedKeys="true">
         <selectKey keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
@@ -11,4 +32,14 @@
         ,#{status},#{createTime})
     </insert>
 
+    <delete id="deleteById" parameterType="Long">
+        DELETE FROM commtent WHERE id=#{id}
+    </delete>
+
+    <select id="findAllByArticle" parameterType="Long" resultMap="commentsMap">
+        SELECT p.id AS p_id,p.article,p.user,p.status AS p_status,p.create_time AS p_createTime,p.content as p_content,
+        c.id AS c_id,c.parent_comment,c.content AS c_content,c.status as c_status,c.to_user,c.from_user,c.create_time AS c_createTime
+        FROM comment p LEFT JOIN child_comment c ON p.id = c.parent_comment
+        WHERE p.article = #{article} ORDER BY p.create_time DESC,c.create_time DESC
+    </select>
 </mapper>

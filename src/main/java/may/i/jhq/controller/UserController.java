@@ -6,7 +6,6 @@ import may.i.jhq.model.User;
 import may.i.jhq.service.RoleService;
 import may.i.jhq.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
@@ -81,15 +80,15 @@ public class UserController {
         return "Hello";
     }
 
-    @Secured("ROLE_AUTHOR")
-    @PostMapping("/home")
+//    @Secured("ROLE_AUTHOR")
+    @GetMapping("/home")
     public String welcome(@RequestParam String email){
 
-        System.out.println("email:"+email);
-
-        User user = userService.findUserByEmail(email);
-
-        roleService.findRoleById(user.getRole().getId());
+//        System.out.println("email:"+email);
+//
+//        User user = userService.findUserByEmail(email);
+//
+//        roleService.findRoleById(user.getRole().getId());
 
         return "welcome";
     }

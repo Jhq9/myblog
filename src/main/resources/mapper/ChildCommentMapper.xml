@@ -3,14 +3,16 @@
 <mapper namespace="may.i.jhq.mapper.ChildCommentMapper" >
 
 
-    <insert id="insert" parameterType="may.i.jhq.model.ChildComment" keyProperty="id" useGeneratedKeys="true">
+    <insert id="save" parameterType="may.i.jhq.model.ChildComment" keyProperty="id" useGeneratedKeys="true">
         <selectKey keyProperty="id" resultType="java.lang.Long">
             select LAST_INSERT_ID()
         </selectKey>
-        INSERT INTO CHILDCOMMENT(parent_comment,content,status,create_time) VALUES (#{parentComment},#{content},
-        #{status},#{createTime})
+        INSERT INTO child_comment(parent_comment,content,status,create_time,to_user,from_user) VALUES (#{parentComment},#{content},
+        #{status},#{createTime},#{toUser},#{fromUser})
     </insert>
 
-
+    <select id="findByParentComment" parameterType="Long" resultType="may.i.jhq.model.ChildComment">
+        SELECT * FROM child_comment WHERE parent_comment=#{parentComment}
+    </select>
 
 </mapper>
